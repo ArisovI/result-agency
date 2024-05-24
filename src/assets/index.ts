@@ -1,6 +1,5 @@
 import hamburger from "./hamburger.svg";
-import doctorIcon from "./doctorIcon.jpg";
-import doctorReal from "./doctorReal.jpg";
+import doctorIcon from "./doctorIcon.svg";
 import ru from "./ru.svg";
 import uz from "./uz.svg";
 import armorIcon01 from "./armorIcon01.svg";
@@ -27,7 +26,6 @@ import map from "./map.jpg";
 export const icons = {
   hamburger,
   doctorIcon,
-  doctorReal,
   uz,
   ru,
   armorIcon01,

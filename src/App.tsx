@@ -1,18 +1,24 @@
-import "./style.scss";
+import { useRef, useState } from "react";
 import { icons, images } from "./assets";
 import { pricesRU, pricesUZ } from "./data";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
+import { useTranslation } from "react-i18next";
+// import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
+
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { useTranslation } from "react-i18next";
-function App() {
+
+export const App = () => {
+  const [active, setActive] = useState<boolean>(false);
   const { t, i18n } = useTranslation();
-  const changeLanguage = (lng: any) => {
+
+  const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
   const prices = i18n.language === "ru" ? pricesRU : pricesUZ;
+
   const openTable = () => {
     if (i18n.language === "ru") {
       window.open(
@@ -24,6 +30,17 @@ function App() {
     );
   };
 
+  const addressRef = useRef<HTMLDivElement>(null);
+  const connectionRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
+  const contactsRef = useRef<HTMLDivElement>(null);
+
+  const scrollToSection = (ref: React.MutableRefObject<HTMLElement | null>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <header className="header">
@@ -31,7 +48,15 @@ function App() {
           <div className="header-inner">
             <input type="checkbox" name="" id="hamburger" />
             <label htmlFor="hamburger">
-              <img src={icons.hamburger} alt="" />
+              {active ? (
+                <span onClick={() => setActive(false)} className="close"></span>
+              ) : (
+                <img
+                  onClick={() => setActive(true)}
+                  src={icons.hamburger}
+                  alt=""
+                />
+              )}
             </label>
             <div className="header-inner__hamburger">
               <div className="header-inner__hamburger_lang">
@@ -56,13 +81,19 @@ function App() {
               <nav>
                 <ul>
                   <li>
-                    <a href="#">{t("header.address")}</a>
+                    <a onClick={() => scrollToSection(addressRef)} href="#">
+                      {t("header.address")}
+                    </a>
                   </li>
                   <li>
-                    <a href="#">{t("header.connection")}</a>
+                    <a onClick={() => scrollToSection(connectionRef)} href="#">
+                      {t("header.connection")}
+                    </a>
                   </li>
                   <li>
-                    <a href="#">{t("header.services")}</a>
+                    <a onClick={() => scrollToSection(servicesRef)} href="#">
+                      {t("header.services")}
+                    </a>
                   </li>
                 </ul>
               </nav>
@@ -77,11 +108,29 @@ function App() {
 
       <main className="main">
         <div className="container">
-          <div className="main-inner"></div>
+          <div className="main-inner">
+            <div className="main-inner__title">
+              <img src={icons.doctorIcon} alt="Иконка доктора" />
+              <h1>
+                {t("main.name")} <span>{t("main.surname")}</span>
+              </h1>
+            </div>
+            <div className="main-inner__info">
+              <ul>
+                <li>{t("main.info01")}</li>
+                <li>{t("main.info02")}</li>
+                <li>{t("main.info03")}</li>
+                <li>{t("main.info04")}</li>
+              </ul>
+              <button onClick={() => scrollToSection(contactsRef)}>
+                {t("main.btn")}
+              </button>
+            </div>
+          </div>
         </div>
       </main>
 
-      <section className="prices">
+      <section className="prices" ref={servicesRef}>
         <div className="container">
           <div className="prices-inner">
             <ul>
@@ -102,16 +151,10 @@ function App() {
         </div>
       </section>
 
-      <section className="armor">
+      <section className="armor" ref={addressRef}>
         <div className="armor-inner">
           <div className="armor-inner__title">
-            <p>
-              Bizning kichik LOR-klinikamiz Yunusobodda. Biz yuqori malakali
-              yordam va istalgan vaqtda kun yoki tun patsiyentlarni samarali
-              davolashni kafolatlaymiz. Biz o‘z xizmatlarimiz sifatiga
-              ishonchimiz komil va sizga tez fursatda sog‘ayib, to‘liq hayotga
-              qaytishingizni va‘da qilamiz.
-            </p>
+            <p>{t("armor.title01")}</p>
           </div>
           <div className="armor-inner__pic">
             <img src={images.armor01} alt="Картинка лор-врача" />
@@ -121,31 +164,25 @@ function App() {
             <ul>
               <li>
                 <img src={icons.armorIcon01} alt="Картинка возможностей" />
-                <p>Ish vaqti 24/7</p>
+                <p>{t("armor.info01")}</p>
               </li>
               <li>
                 <img src={icons.armorIcon02} alt="Картинка возможностей" />
-                <p>Ish vaqti 24/7</p>
+                <p>{t("armor.info02")}</p>
               </li>
               <li>
                 <img src={icons.armorIcon03} alt="Картинка возможностей" />
-                <p>Ish vaqti 24/7</p>
+                <p>{t("armor.info03")}</p>
               </li>
             </ul>
-            <h3>
-              Biz tushunamizki, ishonchingizni qozonadigan mutaxassisni topish
-              qiyin. Shuning uchun biz doimiy ravishda o‘z kasbiy va ijtimoiy
-              ko‘nikmalarimizni rivojlantirib, siz konsultatsiya va muolajalar
-              vaqti da o‘zingizni ishonchli va qulay his qilishingiz uchun
-              harakat qilamiz.
-            </h3>
+            <h3>{t("armor.title02")}</h3>
           </div>
         </div>
       </section>
 
       <section className="review">
         <div className="review-inner">
-          <h2>Bizning bemorlarimizning sharhlari</h2>
+          <h2>{t("review.title")}</h2>
           <div className="review-inner__content">
             <Swiper
               modules={[Pagination, Navigation]}
@@ -183,13 +220,10 @@ function App() {
         </div>
       </section>
 
-      <section className="social">
+      <section className="social" ref={connectionRef}>
         <div className="social-inner">
-          <h2>Bizning ijtimoiy tarmoqlar</h2>
-          <p>
-            LOR kasalliklarining oldini olish haqida foydali ma‘lumotlar va
-            boshqalar
-          </p>
+          <h2>{t("social.title")}</h2>
+          <p>{t("social.text")}</p>
           <ul>
             <li>
               <a href="#">
@@ -215,11 +249,11 @@ function App() {
         </div>
       </section>
 
-      <div className="contacts">
+      <section className="contacts" ref={contactsRef}>
         <div className="contain">
           <div className="contacts-inner">
             <div className="contacts-inner__left">
-              <h2>Aloqa</h2>
+              <h2>{t("contacts.title")}</h2>
               <ul>
                 <li>
                   <a href="#">+998 97 710 16 92</a>
@@ -233,116 +267,84 @@ function App() {
               </ul>
               <a href="#">ali.med.xz1991@gmail.com</a>
               <div className="address">
-                <p>Toshkent, Yunusobod 15-chi kv,</p>
-                <span>Ahmad Donish ko‘chasi, 7-uy.</span>
-                <p>Orientir: "Turkiston" metrosi</p>
+                <p>{t("contacts.city")}</p>
+                <span>{t("contacts.city")}</span>
+                <p>{t("contacts.orientir")}</p>
               </div>
-              <p>Ish vaqti: 24/7</p>
+              <p>{t("contacts.time")}</p>
             </div>
 
-            <img src={images.map} alt="Картинка яндекс карты" />
+            <img src={images.map} alt="Картинка карты" />
+            {/*    <YMaps query={{ apikey: API_KEY }}>
+              <div className="map">
+                <Map
+                  defaultState={{ center: [55.751574, 37.573856], zoom: 9 }}
+                  width="100%"
+                  height="400px"
+                >
+                  <Placemark geometry={[55.751574, 37.573856]} />
+                </Map>
+              </div>
+            </YMaps> */}
           </div>
         </div>
-      </div>
+      </section>
 
       <footer className="footer">
         <div className="container">
           <div className="footer-inner">
             <div className="footer-inner__item">
-              <h4>
-                Alisher Bahromovich Qurbonovning LOR-xirurgiya klinikasi:
-                Sog'lig'ingiz ishonchli qo'llarda
-              </h4>
-              <p>
-                Yunusobod, Toshkentning yuragida joylashgan bizning LOR
-                kasalliklari klinikamizga xush kelibsiz. Bu yerda, sohaning
-                yetakchi mutaxassisi, doktor Alisher Bahromovich Qurbonov
-                rahbarligida, biz quloqlar, burun va tomog'ning kasalliklarini
-                aniqlash, davolash va oldini olish bo'yicha keng ko'lamli
-                xizmatlarni taklif etamiz. Bizning klinikamiz kechayu kunduz
-                ishlaydi, sizga qulay vaqtda yuqori sifatli tibbiy yordamga
-                kirish imkoniyatini ta'minlaydi.
-              </p>
+              <h4>{t("footer.itemTitle01")}</h4>
+              <p>{t("footer.itemText01")}</p>
             </div>
 
             <div className="footer-inner__item ">
-              <h4>Keng ko'lamli LOR xizmatlari</h4>
-              <p>
-                Bizning klinikamiz gajmorit, sinusit, adenoidlar, otit kabi
-                kasalliklarni davolashdan tashqari, boshqa LOR muammolari uchun
-                ham to'liq xizmatlarni taklif etadi. Biz eng zamonaviy
-                diagnostika va davolash usullaridan foydalanib, bemorlarimiz
-                uchun eng yaxshi natijalarga erishishni maqsad qilamiz:
-              </p>
+              <p>{t("footer.itemTitle02")}</p>
               <div className="footer-inner__item_dp">
                 <p>
-                  <span>Gajmorit va sinusitni davolash:</span>
-                  Innovatsion yondashuvlar yordamida biz burun bo'shliqlarining
-                  yallig'lanishini samarali tarzda davolaymiz, takroriy
-                  kasallanish xavfini kamaytiramiz.
+                  <span>{t("footer.itemTitle02DPTitle01")}</span>
+                  {t("footer.itemTitle02DPText01")}
                 </p>
                 <p>
-                  <span>Adenoidlarni olib tashlash va otitni davolash:</span>
-                  Kam invaziv texnikalardan foydalanib, biz bolalar va kattalar
-                  bemorlarni adenoidlar va quloq yallig'lanishlari muammolaridan
-                  muvaffaqiyatli davolaymiz.
+                  <span>{t("footer.itemTitle03DPTitle02")}</span>
+                  {t("footer.itemTitle03DPText02")}
                 </p>
                 <p>
-                  <span>Zamonaviy LOR kasalliklarini davolash usullari:</span>
-                  Endoskopik operatsiyalar, lazer va radioto'lqinli usullar
-                  kabi, tiklanish davrini minimal darajaga tushiradigan va
-                  davolashning yuqori samaradorligini ta'minlaydigan.
+                  <span>{t("footer.itemTitle04DPTitle03")}</span>
+                  {t("footer.itemTitle04DPText03")}
                 </p>
               </div>
             </div>
 
             <div className="footer-inner__item ">
-              <h4>Bizning afzalliklarimiz</h4>
+              <h4>{t("footer.itemTitle05")}</h4>
               <div className="footer-inner__item_dp">
                 <p>
-                  <span>Kechayu kunduz ishlash:</span>
-                  Har qanday vaqtda yordam berishga tayyorligimiz - bizning
-                  ustuvorligimiz.
+                  <span>{t("footer.itemTitle06DPTitle04")}</span>
+                  {t("footer.itemTitle06DPText04")}
                 </p>
                 <p>
-                  <span>Tajribali mutaxassis:</span>
-                  Doktor Qurbonov otolaringologiya sohasida boy tajribaga va
-                  chuqur bilimga ega, bu esa bizga eng so'nggi ilmiy yutuqlarga
-                  asoslangan davolashni taklif etish imkonini beradi.
+                  <span>{t("footer.itemTitle07DPTitle05")}</span>
+                  {t("footer.itemTitle07DPText05")}
                 </p>
 
                 <p>
-                  <span>Shaxsiy yondashuv:</span> Biz har bir bemorga individual
-                  e'tibor beramiz, ularning noyob ehtiyoj va sharoitlariga eng
-                  mos keladigan davolash rejalarini ishlab chiqamiz.
+                  <span>{t("footer.itemTitle08DPTitle06")}</span>{" "}
+                  {t("footer.itemTitle08DPText06")}
                 </p>
                 <p>
-                  <span>Yuqori texnologiyali uskunalar: </span> Bizning
-                  klinikamiz aniq diagnostika va samarali davolash uchun
-                  zamonaviy tibbiy uskunalarga ega.
+                  <span>{t("footer.itemTitle09DPTitle07")}</span>
+                  {t("footer.itemTitle09DPText07")}
                 </p>
               </div>
             </div>
 
             <div className="footer-inner__item">
-              <p>
-                Doktor Qurbonovning klinikasida siz nafaqat professional tibbiy
-                yordam, balki har bir davolanish bosqichida g'amxo'rlik va
-                qo'llab-quvvatlashni topasiz. Bizning maqsadimiz - siz va
-                yaqinlaringizga Toshkentdagi eng yaxshi LOR xizmatlariga
-                kirishni ta'minlash, shunda siz noqulaylik va og'riqsiz to'liq
-                hayot kechirishingiz mumkin. Agar siz LOR kasalliklarini
-                davolashda malakali yordam izlayotgan bo'lsangiz, bizning
-                klinikamizga murojaat qilishingizdan tortinmang. Biz sizga
-                kechayu kunduz yordam berish uchun bu yerdamiz. Qabulga yozilish
-                yoki qo'shimcha ma'lumot olish uchun bugun biz bilan bog'laning.
-              </p>
+              <p>{t("footer.itemTitle10")}</p>
             </div>
           </div>
         </div>
       </footer>
     </>
   );
-}
-
-export default App;
+};

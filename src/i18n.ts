@@ -9,7 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     supportedLngs: ["ru", "uz"],
-    fallbackLng: "ru",
+    fallbackLng: "uz",
     detection: {
       order: ["queryString", "cookie"],
       caches: ["cookie"],
