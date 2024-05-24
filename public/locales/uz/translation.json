@@ -1,0 +1,12 @@
+{
+  "header": {
+    "services": "Xizmatlar",
+    "connection": "Aloqa",
+    "address": "Manzil",
+    "street": "Ahmad Donish ko‘chasi, 7-uy"
+  },
+  "prices": {
+    "btn": "Narxlar ro‘yxatini yuklab olish",
+    "price": "Narxi"
+  }
+}
